@@ -1,0 +1,69 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "unibo": "https://www.unibo.it/en#",
+    "ckan": "https://dati.unibo.it/api/3/action/#",
+    "oai": "http://www.openarchives.org/OAI/2.0/",
+    "dc": "http://purl.org/dc/elements/1.1/",
+
+    "organization": {
+      "@id": "schema:CollegeOrUniversity",
+      "@type": "@id"
+    },
+    "name": "schema:name",
+    "legalName": "schema:legalName",
+    "url": "schema:url",
+    "description": "schema:description",
+    "foundingDate": "schema:foundingDate",
+    "logo": "schema:logo",
+    "sameAs": {
+      "@id": "schema:sameAs",
+      "@type": "@id"
+    },
+    "email": "schema:email",
+
+    "dataset": {
+      "@id": "schema:Dataset",
+      "@type": "@id"
+    },
+    "catalog": {
+      "@id": "schema:DataCatalog",
+      "@type": "@id"
+    },
+    "datasetId": "ckan:id",
+    "datasetTitle": {
+      "@id": "schema:name",
+      "@context": { "@vocab": "ckan:" }
+    },
+    "notes": "schema:description",
+    "resources": "schema:distribution",
+
+    "repository": {
+      "@id": "schema:DataCatalog",
+      "@type": "@id"
+    },
+    "repositoryName": "oai:repositoryName",
+    "baseURL": "oai:baseURL",
+    "record": {
+      "@id": "schema:CreativeWork",
+      "@type": "@id"
+    },
+    "identifier": "dc:identifier",
+    "title": "dc:title",
+    "creator": "dc:creator",
+    "subject": "dc:subject",
+    "date": "dc:date",
+    "doi": "schema:identifier"
+  },
+  "@type": "CollegeOrUniversity",
+  "name": "University of Bologna",
+  "legalName": "Alma Mater Studiorum - Università di Bologna",
+  "url": "https://www.unibo.it/en",
+  "foundingDate": "1088",
+  "sameAs": [
+    "https://github.com/unibo",
+    "https://www.linkedin.com/school/unibo/",
+    "https://dati.unibo.it/",
+    "https://amsacta.unibo.it/"
+  ]
+}
