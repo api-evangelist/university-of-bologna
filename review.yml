@@ -1,0 +1,37 @@
+---
+name: University of Bologna
+description: University of Bologna public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/university-of-bologna/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 3
+    summary: >-
+      The University of Bologna has a modest but genuine public API footprint built on
+      open standards rather than a branded developer program. Verified live: the
+      dati.unibo.it CKAN portal returns a valid CKAN Action API JSON response
+      (success:true, ~33 datasets), and the AMS Acta EPrints repository returns a valid
+      OAI-PMH 2.0 Identify response. An official GitHub org (github.com/unibo) and a
+      LinkedIn school page were confirmed. No unified API developer portal, signup
+      flow, course/SIS API, or status page was found; administrative and identity
+      systems are gated behind institutional credentials. No endpoints were fabricated.
+    endpoints:
+      - url: https://dati.unibo.it/
+        status: 200
+        note: CKAN open data portal homepage, confirmed live.
+      - url: https://dati.unibo.it/api/3/action/package_list
+        status: 200
+        note: CKAN Action API; valid JSON, success:true, ~33 datasets.
+      - url: https://amsacta.unibo.it/cgi/oai2?verb=Identify
+        status: 200
+        note: Valid OAI-PMH 2.0 Identify, EPrints 3.4.4, AMS Acta repository.
+      - url: https://github.com/unibo
+        status: 200
+        note: Official University of Bologna GitHub org, 6 repositories.
+      - url: https://www.linkedin.com/school/unibo/
+        status: 200
+        note: Official LinkedIn school page.
+      - url: https://www.unibo.it/en
+        status: 200
+        note: Official institutional website (English).

@@ -1,0 +1,76 @@
+---
+aid: university-of-bologna
+name: University of Bologna
+description: >-
+  The University of Bologna (Alma Mater Studiorum - Università di Bologna) is the
+  oldest university in the Western world and a leading Italian research institution,
+  ranked #133 in the QS World University Rankings 2025. Its public developer and API
+  footprint centers on open data and open scholarship rather than a unified developer
+  portal: a CKAN-based open data portal at dati.unibo.it exposes a standard CKAN Action
+  API over institutional datasets, and the AlmaDL AMS Acta institutional repository
+  (EPrints) exposes an OAI-PMH metadata-harvesting interface. The university also
+  maintains an official open-source GitHub organization. Most administrative, course,
+  and identity systems require institutional credentials and are not openly documented.
+type: Index
+position: Consumer
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/university-of-bologna/refs/heads/main/apis.yml
+tags:
+  - Education
+  - Higher Education
+  - University
+  - Open Data
+  - Research
+  - Italy
+  - Europe
+created: '2026-06-03'
+modified: '2026-06-03'
+specificationVersion: '0.19'
+apis:
+  - aid: university-of-bologna:opendata-ckan
+    name: University of Bologna Open Data (CKAN API)
+    description: >-
+      Open data portal for the University of Bologna built on CKAN, exposing the
+      standard CKAN Action API over institutional datasets (course catalog,
+      curricula, financial and social reports, organizational data). Returns JSON
+      and was confirmed live returning success:true with ~33 datasets.
+    humanURL: https://dati.unibo.it/
+    baseURL: https://dati.unibo.it/api/3/action/
+    tags: [ Open Data, CKAN, Datasets, Education ]
+    properties:
+      - type: Documentation
+        url: https://docs.ckan.org/en/latest/api/
+  - aid: university-of-bologna:amsacta-oai-pmh
+    name: AMS Acta Institutional Repository (OAI-PMH)
+    description: >-
+      AMS Acta is the AlmaDL institutional repository of the University of Bologna,
+      running on EPrints 3.4.x. It exposes an OAI-PMH 2.0 metadata-harvesting
+      interface (Dublin Core), confirmed live via an Identify response. Metadata is
+      CC0-licensed and items carry persistent DOIs.
+    humanURL: https://amsacta.unibo.it/
+    baseURL: https://amsacta.unibo.it/cgi/oai2
+    tags: [ OAI-PMH, Repository, EPrints, Research, Open Access ]
+    properties:
+      - type: Documentation
+        url: https://amsacta.unibo.it/cgi/oai2?verb=Identify
+common:
+  - type: Website
+    url: https://www.unibo.it/en
+  - type: GitHub
+    url: https://github.com/unibo
+  - type: LinkedIn
+    url: https://www.linkedin.com/school/unibo/
+  - type: DeveloperPortal
+    url: https://dati.unibo.it/
+  - type: Plans
+    url: plans/university-of-bologna-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/university-of-bologna-rate-limits.yml
+  - type: FinOps
+    url: finops/university-of-bologna-finops.yml
+  - type: Review
+    url: review.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
