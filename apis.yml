@@ -55,6 +55,8 @@ apis:
       - type: Documentation
         url: https://amsacta.unibo.it/cgi/oai2?verb=Identify
 common:
+  - type: DomainSecurity
+    url: security/university-of-bologna-domain-security.yml
   - type: Website
     url: https://www.unibo.it/en
   - type: GitHub
