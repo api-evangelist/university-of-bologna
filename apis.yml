@@ -38,7 +38,7 @@ tags:
   - Europe
 created: '2026-06-03'
 modified: '2026-06-03'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
   - aid: university-of-bologna:opendata-ckan
     name: University of Bologna Open Data (CKAN API)
