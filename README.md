@@ -64,23 +64,67 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-The University of Bologna (Alma Mater Studiorum - Università di Bologna) is the oldest university in the Western world and a leading Italian research institution, ranked #133 in the QS World University Rankings 2025. This repository catalogs its public developer and API footprint as an APIs.json provider profile for the api-evangelist network. The footprint centers on open data and open scholarship: a CKAN-based open data portal and an EPrints institutional repository exposing OAI-PMH.
+The University of Bologna (Alma Mater Studiorum - Università di Bologna) is the oldest university in the Western world, founded in 1088, and Italy's largest public research university. This repository catalogs its public developer and API footprint as an APIs.json provider profile for the api-evangelist network, profiled under the university pipeline — which settles **who operates** each surface before saving anything.
+
+The university publishes no OpenAPI, runs no developer portal and issues no API keys. What it does operate, on its own unibo.it hosts, is an unusually deep set of standards-based machine surfaces: a CKAN open data portal, four separate live OAI-PMH 2.0 providers run by the AlmaDL digital library, a Shibboleth SAML 2.0 identity provider published in the IDEM GARR AAI federation, and an LTI 1.3 platform surface on its self-hosted Moodle.
 
 - APIs.json: https://raw.githubusercontent.com/api-evangelist/university-of-bologna/refs/heads/main/apis.yml
 - Run with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=university-of-bologna-api-evangelist&utm_content=repo
 
 ## Type
 
-- Index / Consumer / 3rd-Party
+- University / Public Research University / Index / Consumer / 3rd-Party
 
 ## Tags
 
-Education, Higher Education, University, Open Data, Research, Italy, Europe
+Education, Higher Education, University, Italy, Europe, Research, Research Repository, Open Data, Open Access, Library, OAI-PMH, Identity Federation, Scholarly Publishing, Learning Management
 
-## APIs
+## Surfaces — by operator
 
-- **University of Bologna Open Data (CKAN API)** — CKAN Action API over institutional datasets. Docs: https://docs.ckan.org/en/latest/api/ · Portal: https://dati.unibo.it/
-- **AMS Acta Institutional Repository (OAI-PMH)** — EPrints 3.4.x OAI-PMH 2.0 metadata harvesting. Docs: https://amsacta.unibo.it/cgi/oai2?verb=Identify · Repository: https://amsacta.unibo.it/
+Every entry carries an `x-operator`. `institution` means the university runs the thing the entry describes; `tenant` means the data is theirs and the platform is a vendor's; `federation` and `registry` are relationships, recorded as facts about the institution.
+
+### institution
+
+- **University of Bologna Open Data (CKAN Action API)** — CKAN 2.6.9 Action API over institutional datasets. `https://dati.unibo.it/api/3/action/`
+- **AMS Acta Institutional Repository OAI-PMH** — EPrints, ten metadata formats including `oai_datacite` and `openaire_oai_dc`. `https://amsacta.unibo.it/cgi/oai2`
+- **AMS Tesi di Dottorato (Doctoral Theses) OAI-PMH** — `https://amsdottorato.unibo.it/cgi/oai2`
+- **AMS Tesi di Laurea (Graduate Theses) OAI-PMH** — `https://amslaurea.unibo.it/cgi/oai2`
+- **AlmaDL Journals OAI-PMH** — Open Journal Systems, 100 open-access journal sets. `https://journals.unibo.it/index.php/index/oai`
+- **Virtuale (Moodle) LTI 1.3 Platform and Web Services** — public JWKS plus an OAuth2 token endpoint; Moodle Web Services is token-gated. `https://virtuale.unibo.it/mod/lti/certs.php`
+
+### federation
+
+- **UNIBO Shibboleth Identity Provider (IDEM GARR AAI)** — entityID `https://shib.unibo.it/idp/shibboleth`, `shibmd:Scope` unibo.it, published in the IDEM GARR aggregate alongside two UNIBO service providers.
+
+### tenant
+
+- **IRIS Research Information System (CINECA tenancy)** — `cris.unibo.it` CNAMEs to `unibo.prod.iris.cineca.it`. The metadata and DOIs are the university's; the software and its contract are CINECA's.
+- **AlmaStart Library Discovery (Ex Libris Primo VE tenancy)** — `almastart.unibo.it` CNAMEs to `unibo.primo.exlibrisgroup.com`, tenant code `39UBO_INST`.
+
+### registry
+
+- **DataCite** — provider UYEY, five repositories, five prefixes (10.6092, 10.13123, 10.48676, 10.48678, 10.60760), 32,291 DOIs.
+- **Crossref** — member 32492, prefix 10.60923, 1,170 DOIs.
+- **ROR** — https://ror.org/01111rn36
+
+## Domain standards (Kin Score `education` regime)
+
+Evidenced from live endpoints, not from prose claims — see [conformance/university-of-bologna-domain-standards.yml](conformance/university-of-bologna-domain-standards.yml).
+
+| Standard | Conformant | Operator |
+|---|---|---|
+| oai-pmh 2.0 | yes | institution |
+| shibboleth | yes | institution |
+| saml 2.0 | yes | institution |
+| lti 1.3 | yes | institution |
+| datacite | yes | registry |
+| crossref | yes | registry |
+| orcid | no | — |
+| scim, oneroster, ed-fi, caliper, qti | no | — |
+
+## Authentication
+
+Three REST APIs sit on institution or institution-branded hosts and all three refuse anonymous callers — OJS returns 403, Moodle Web Services returns `invalidtoken`, IRIS returns 401 basic-auth. Recorded in [authentication/university-of-bologna-authentication.yml](authentication/university-of-bologna-authentication.yml) rather than counted as callable.
 
 ## Plans / Rate Limits / FinOps
 
@@ -91,19 +135,27 @@ Education, Higher Education, University, Open Data, Research, Italy, Europe
 ## Timestamps
 
 - Created: 2026-06-03
-- Modified: 2026-06-03
+- Modified: 2026-09-01
 
 ## Common Properties
 
 - Website: https://www.unibo.it/en
-- GitHub: https://github.com/unibo
+- Open Data: https://dati.unibo.it/
+- Research Repository: https://amsacta.unibo.it/
+- Identity Federation: https://shib.unibo.it/idp/shibboleth
+- Library Catalog: https://almastart.unibo.it/discovery/search?vid=39UBO_INST:VU
+- Course Catalog: https://corsi.unibo.it/
+- AI Policy: https://www.unibo.it/it/ateneo/statuto-norme-strategie-bilanci/intelligenza-artificiale
+- GitHub Organization: https://github.com/unibo
+- Privacy Policy: https://www.unibo.it/en/university/privacy-policy-and-legal-notes
 - LinkedIn: https://www.linkedin.com/school/unibo/
-- Developer Portal: https://dati.unibo.it/
 - Review: [review.yml](review.yml)
 
 ## Notes
 
-All listed APIs were verified live on 2026-06-03: the CKAN Action API returned a valid JSON response (success:true, ~33 datasets) and AMS Acta returned a valid OAI-PMH Identify response. No unified API developer portal, signup flow, course/SIS API, or status page was found; administrative and identity systems are gated behind institutional credentials. No endpoints were fabricated.
+Every surface listed above was probed live on 2026-09-01 from an unauthenticated client. No vendor contract has been saved under this institution and no OpenAPI has been generated to stand in for one: CKAN, EPrints, OJS, Moodle and DSpace-CRIS contracts are product contracts shared by every deployment of that software.
+
+Absences, stated rather than padded: no OpenAPI, no developer portal, no self-service key issuance, no status page, no `llms.txt`, no `.well-known/security.txt`, and no ORCID identifiers in any metadata the university serves. `api.unibo.it` does not resolve. The institutional generative-AI policy is a real governance artifact but exists only on the Italian surface — the English path returns 404. During this run `dati.unibo.it` stopped answering our client after two successful requests (TCP open, no HTTP response), which reads as an undocumented rate limit on our probing rather than an outage, and is recorded as such.
 
 ## Maintainers
 

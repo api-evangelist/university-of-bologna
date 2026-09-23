@@ -1,0 +1,142 @@
+---
+name: University of Bologna — authentication surfaces
+slug: university-of-bologna
+generated: '2026-09-01'
+method: probed
+source: https://www.unibo.it/en
+note: >-
+  How the University of Bologna's machine surfaces authenticate, recorded from live
+  unauthenticated probes on 2026-09-01. This artifact exists mainly to record what is NOT
+  callable: three REST APIs sit on institution or institution-branded hosts and all three
+  refuse anonymous callers. They are documented here rather than counted as public APIs. No
+  credentials of any kind were used or attempted; every response below is what a member of
+  the public receives.
+surfaces:
+  - name: CKAN Action API (dati.unibo.it)
+    x-operator: institution
+    auth: none
+    self_service_keys: false
+    detail: >-
+      Anonymous read. https://dati.unibo.it/api/3/action/package_list returned 200
+      application/json with success:true, and status_show returned ckan_version 2.6.9. Write
+      operations in CKAN require an API key issued from a portal user account; no public
+      signup or key-issuance flow was found on this deployment. The only unauthenticated,
+      genuinely callable API the university operates.
+    evidence:
+      - url: https://dati.unibo.it/api/3/action/package_list
+        status: 200
+      - url: https://dati.unibo.it/api/3/action/status_show
+        status: 200
+  - name: AlmaDL OAI-PMH providers (AMS Acta, AMS Dottorato, AMS Laurea, AlmaDL Journals)
+    x-operator: institution
+    auth: none
+    self_service_keys: false
+    detail: >-
+      All four OAI-PMH 2.0 endpoints answer unauthenticated GET requests for Identify,
+      ListMetadataFormats, ListSets and ListRecords. OAI-PMH has no authentication layer by
+      design; these are open harvesting surfaces.
+    evidence:
+      - url: https://amsacta.unibo.it/cgi/oai2?verb=Identify
+        status: 200
+      - url: https://amsdottorato.unibo.it/cgi/oai2?verb=Identify
+        status: 200
+      - url: https://amslaurea.unibo.it/cgi/oai2?verb=Identify
+        status: 200
+      - url: https://journals.unibo.it/index.php/index/oai?verb=Identify
+        status: 200
+  - name: AlmaDL Journals OJS REST API v1
+    x-operator: institution
+    auth: token
+    self_service_keys: false
+    callable_anonymously: false
+    detail: >-
+      The Open Journal Systems REST API is present on the institution's own host and closed.
+      https://journals.unibo.it/index.php/ijhb/api/v1/issues returns 403 application/json
+      {"error":"api.403.unauthorized","errorMessage":"You are not authorized to access the
+      requested resource."}. The site-wide https://journals.unibo.it/api/v1/contexts returns
+      500 with an empty body. OJS API tokens are issued from an editorial user profile inside
+      each journal; there is no public developer registration.
+    evidence:
+      - url: https://journals.unibo.it/index.php/ijhb/api/v1/issues
+        status: 403
+      - url: https://journals.unibo.it/api/v1/contexts
+        status: 500
+  - name: Virtuale (Moodle) Web Services REST API
+    x-operator: institution
+    auth: token
+    self_service_keys: false
+    callable_anonymously: false
+    detail: >-
+      https://virtuale.unibo.it/webservice/rest/server.php returns 200 application/xml with
+      <EXCEPTION class="core\exception\moodle_exception"><ERRORCODE>invalidtoken</ERRORCODE>
+      <MESSAGE>Token non valido - il token non è stato trovato</MESSAGE>. A live, correctly
+      rejecting endpoint — not a soft 404 — but tokens are issued by the university to
+      approved integrations, not self-service, so this is not a public API.
+    evidence:
+      - url: https://virtuale.unibo.it/webservice/rest/server.php
+        status: 200
+  - name: Virtuale (Moodle) LTI 1.3 platform
+    x-operator: institution
+    auth: oauth2
+    flow: client_credentials
+    self_service_keys: false
+    detail: >-
+      The LTI 1.3 platform surface is partly public by design: the JWKS at
+      https://virtuale.unibo.it/mod/lti/certs.php is served unauthenticated (200
+      application/json, RS256 key kid a0f8811debf999e8089e) because tool providers must fetch
+      it to verify the platform's signatures. The paired token endpoint
+      https://virtuale.unibo.it/mod/lti/token.php implements OAuth2 client credentials with a
+      signed JWT assertion and returns 400 {"error":"invalid_request"} to an empty request.
+      Client registration is per-tool, arranged with the university.
+    evidence:
+      - url: https://virtuale.unibo.it/mod/lti/certs.php
+        status: 200
+      - url: https://virtuale.unibo.it/mod/lti/token.php
+        status: 400
+  - name: IRIS DSpace-CRIS REST API (cris.unibo.it)
+    x-operator: tenant
+    auth: basic
+    self_service_keys: false
+    callable_anonymously: false
+    detail: >-
+      https://cris.unibo.it/rest/api returns 401 "HTTP Status 401 - Invalid basic
+      authentication token"; https://cris.unibo.it/server/api returns the Angular shell
+      (soft-200, not an API root). The host CNAMEs to unibo.prod.iris.cineca.it, so both the
+      software and the auth design are CINECA's. Only the OAI-PMH provider on this host is
+      open.
+    evidence:
+      - url: https://cris.unibo.it/rest/api
+        status: 401
+      - url: https://cris.unibo.it/server/api
+        status: 200
+  - name: Shibboleth Identity Provider (shib.unibo.it)
+    x-operator: federation
+    auth: saml2
+    self_service_keys: false
+    detail: >-
+      The IdP metadata document itself is published unauthenticated — that is the point of
+      federation metadata — at https://shib.unibo.it/idp/shibboleth (200 application/xml,
+      7,625 bytes). It advertises SAML 2.0 SingleSignOnService endpoints for HTTP-POST,
+      HTTP-POST-SimpleSign and HTTP-Redirect. Authentication itself is interactive SSO for
+      institutional accounts and is not a programmable surface. A second, ADFS-based SP
+      (http://idp.unibo.it/adfs/services/trust) fronts institutional web applications; e.g.
+      https://site.unibo.it/ redirects into an ADFS SAMLRequest.
+    evidence:
+      - url: https://shib.unibo.it/idp/shibboleth
+        status: 200
+      - url: https://md.idem.garr.it/metadata/idem-metadata-sha256.xml
+        status: 200
+absent:
+  - developer_portal: >-
+      No developer portal, no API key signup, no self-service onboarding on any unibo.it host.
+      api.unibo.it does not resolve.
+  - api_terms: >-
+      No API-specific terms of service or acceptable-use policy was found for any surface. The
+      institutional privacy and legal notes at
+      https://www.unibo.it/en/university/privacy-policy-and-legal-notes (200) are the closest
+      published document and do not address API use.
+  - rate_limits: >-
+      No published rate limits for any surface. During this run dati.unibo.it stopped
+      answering our client entirely after two successful requests — TCP 443 still accepted a
+      connection but no HTTP response returned within 60s — which is consistent with an
+      undocumented WAF or rate-limit reaction rather than an outage.

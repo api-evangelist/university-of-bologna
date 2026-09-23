@@ -1,0 +1,259 @@
+---
+# Education-regime domain-standard conformance for the University of Bologna.
+# Kin Score 0.12.0 `domain_standard_conformance` reads this from CONTRACT/endpoint evidence,
+# never from a prose claim. REWARD-ONLY: only standards with a probed, dated location are
+# recorded as conformant. Nothing here was invented to fill a slot.
+name: University of Bologna — education domain standard conformance
+slug: university-of-bologna
+regime: education
+generated: '2026-09-01'
+method: probed
+source: https://www.unibo.it/en
+notes: >-
+  Every entry below was reached with a live HTTP probe on 2026-09-01 using a browser
+  User-Agent, from an unauthenticated client, against a public URL. Surfaces belonging to the
+  university's vendors are marked with the operator that actually runs them: cris.unibo.it is
+  a CINECA IRIS tenancy (CNAME to unibo.prod.iris.cineca.it) and almastart.unibo.it is an Ex
+  Libris Primo VE tenancy (CNAME to unibo.primo.exlibrisgroup.com). Standards named in the
+  education regime but not evidenced here — scim, oneroster, ed-fi, caliper, qti, orcid — are
+  recorded as non-conformant with the negative probe that established it.
+standards:
+  - standard: oai-pmh
+    conformant: true
+    version: '2.0'
+    operator: institution
+    evidence:
+      url: https://amsacta.unibo.it/cgi/oai2?verb=Identify
+      status: 200
+      content_type: text/xml
+      location: >-
+        <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"> …
+        <Identify><repositoryName>AMS Acta - AlmaDL Università di Bologna</repositoryName>
+        <baseURL>https://amsacta.unibo.it/cgi/oai2</baseURL>
+        <protocolVersion>2.0</protocolVersion>
+        <adminEmail>eprints@cib.unibo.it</adminEmail>
+        <earliestDatestamp>2011-05-16T11:20:59Z</earliestDatestamp>
+        <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+    detail: >-
+      The strongest and most widely deployed standard in this repository: the University of
+      Bologna runs FOUR separate institution-hosted OAI-PMH 2.0 providers, all on its own
+      network, plus a fifth on its CINECA tenancy.
+      (1) AMS Acta, https://amsacta.unibo.it/cgi/oai2 — verb=ListMetadataFormats returns ten
+      prefixes: almadl, almadl_solr, didl, mets, oai_bibl, oai_datacite, oai_dc,
+      openaire_oai_dc, rdf, uketd_dc.
+      (2) AMS Tesi di Dottorato, https://amsdottorato.unibo.it/cgi/oai2 — repositoryName "AMS
+      Tesi di Dottorato - AlmaDL - Università di Bologna", earliestDatestamp
+      2014-01-15T14:36:42Z.
+      (3) AMS Tesi di Laurea, https://amslaurea.unibo.it/cgi/oai2 — repositoryName "AMS Tesi
+      di Laurea - AlmaDL - Università di Bologna", earliestDatestamp 2011-05-16T10:19:32Z.
+      (4) AlmaDL Journals, https://journals.unibo.it/index.php/index/oai — repositoryName
+      "AlmaDL Journals", adminEmail ojs@unibo.it, earliestDatestamp 2007-11-26T14:59:40Z,
+      verb=ListSets returns 100 sets, one per open-access journal or section.
+      (5) IRIS, https://cris.unibo.it/oai/request — repositoryName "IRIS - UNIBO - prod",
+      adminEmail artec.valutazione@unibo.it, operator `tenant` (CINECA DSpace-CRIS).
+      Hosts (1)–(3) resolve through frontend-http-01.unibo.it to 137.204.24.86 and (4) through
+      atrproxy4.unibo.it to 137.204.24.209 — the university's own allocation.
+  - standard: shibboleth
+    conformant: true
+    operator: institution
+    evidence:
+      url: https://shib.unibo.it/idp/shibboleth
+      status: 200
+      content_type: application/xml
+      location: >-
+        <md:EntityDescriptor entityID="https://shib.unibo.it/idp/shibboleth"> carries an
+        <md:IDPSSODescriptor> and a <shibmd:Scope regexp="false">unibo.it</shibmd:Scope>
+        extension in the urn:mace:shibboleth:metadata:1.0 namespace;
+        <mdui:DisplayName xml:lang="en">IDP for the users of the University of
+        Bologna</mdui:DisplayName>.
+    detail: >-
+      The university self-hosts its Shibboleth Identity Provider on its own registrable domain
+      — shib.unibo.it resolves through frontend-http-01.unibo.it to 137.204.24.86, inside
+      UNIBO's own allocation. The 7,625-byte metadata document is the university's own
+      artifact, served unauthenticated, and is the strongest institution-operated
+      machine-readable surface in this repository.
+  - standard: saml
+    conformant: true
+    version: '2.0'
+    operator: institution
+    evidence:
+      url: https://md.idem.garr.it/metadata/idem-metadata-sha256.xml
+      status: 200
+      content_type: application/samlmetadata+xml
+      location: >-
+        EntitiesDescriptor aggregate (3,054,701 bytes, 317 entities, valid until
+        2026-09-07T16:00:10.810Z) containing three UNIBO entities —
+        entityID="https://shib.unibo.it/idp/shibboleth" (IDPSSODescriptor, OrganizationName
+        "Università di Bologna"), entityID="http://idp.unibo.it/adfs/services/trust"
+        (SPSSODescriptor, DisplayName "UNIBO Service gateway", OrganizationName "ALMA MATER
+        STUDIORUM - Università di Bologna") and entityID="https://book.unibo.it/edx"
+        (SPSSODescriptor, DisplayName "BOOK Unibo Open Knowledge").
+    detail: >-
+      The IdP metadata declares protocolSupportEnumeration
+      urn:oasis:names:tc:SAML:2.0:protocol and publishes SAML 2.0 SingleSignOnService
+      endpoints for the HTTP-POST, HTTP-POST-SimpleSign and HTTP-Redirect bindings. The
+      university is a member of IDEM GARR AAI, the Italian identity federation, which is an
+      eduGAIN participant, so these entities are interfederated internationally. A second SAML
+      surface is visible in production: https://site.unibo.it/ redirects to an ADFS
+      SAMLRequest at idp.unibo.it/adfs/ls/, and idp.unibo.it resolves through
+      idptm.trafficmanager.net to Azure — the tenant is the university's, the hosting is
+      Microsoft's.
+  - standard: lti
+    conformant: true
+    version: '1.3'
+    operator: institution
+    evidence:
+      url: https://virtuale.unibo.it/mod/lti/certs.php
+      status: 200
+      content_type: application/json
+      location: >-
+        {"keys":[{"kty":"RSA","alg":"RS256","kid":"a0f8811debf999e8089e","e":"AQAB","n":"qXv1uXnEM23VHN9KEEFGZEFeIuLlQvRgD_0InVa50BjL22hvJ51fZ3eDQGVVn2eAK8OvZK0hhyWp5jomFtwr…"}]}
+    detail: >-
+      Virtuale, the university's self-hosted Moodle LMS at virtuale.unibo.it
+      (frontend-http-azure-01.unibo.it), exposes a live LTI 1.3 platform surface. The JWKS
+      above is served unauthenticated, and the paired OAuth2 token endpoint
+      https://virtuale.unibo.it/mod/lti/token.php returns HTTP 400
+      {"error":"invalid_request"} to an empty request — a live, correctly-rejecting endpoint
+      rather than a soft 404. This is an institution-operated conformance surface: Moodle is
+      the software, the deployment and the signing keys are the university's.
+  - standard: datacite
+    conformant: true
+    operator: registry
+    evidence:
+      url: https://api.datacite.org/providers/uyey
+      status: 200
+      content_type: application/vnd.api+json
+      location: >-
+        data.attributes.name = "Università degli Studi di Bologna";
+        displayName = "UNIBO"; symbol = "UYEY"; memberType = "consortium_organization";
+        isActive = true; created = "2021-06-07T15:05:59.000Z";
+        relationships.clients = [crui.unibo, uyey.aldomoro, uyey.amsdottorato,
+        uyey.doiesterni, uyey.books].
+    detail: >-
+      The University of Bologna is a DataCite consortium organization under CRUI with five
+      prefixes — 10.6092, 10.13123, 10.48676, 10.48678, 10.60760 — and five registered
+      repositories. https://api.datacite.org/dois?provider-id=uyey reports 32,291 DOIs, and
+      sampled records resolve to the university's own hosts, e.g. 10.6092/unibo/amsacta/9101 →
+      https://amsacta.unibo.it/id/eprint/9101, publisher "Alma Mater Studiorum - Università di
+      Bologna". Conformance is also visible in the CONTRACT rather than only in the registry:
+      the AMS Acta OAI-PMH provider serves an `oai_datacite` metadata prefix, and
+      verb=ListRecords&metadataPrefix=oai_datacite returns records with
+      <identifier identifierType="DOI">10.6092/unibo/amsacta/14</identifier>. This is a
+      membership fact about the university, recorded per the registry rule; DataCite's own API
+      contract is NOT saved here.
+  - standard: crossref
+    conformant: true
+    operator: registry
+    evidence:
+      url: https://api.crossref.org/members/32492
+      status: 200
+      content_type: application/json
+      location: >-
+        message.id = 32492; message.primary-name = "Alma Mater Studiorum Università di
+        Bologna"; message.location = "Bologna, Bologna, Italy";
+        message.prefixes = ["10.60923"]; message.counts.total-dois = 1170.
+    detail: >-
+      An active, exercised Crossref membership: https://api.crossref.org/prefixes/10.60923/works
+      returns 1,171 works with publisher "Alma Mater Studiorum Università di Bologna",
+      registered against the university's own journal ISSNs (e.g.
+      10.60923/issn.2533-2325/22369, 10.60923/issn.2280-9481/21535). A separate Crossref
+      member, "Bologna University Press Foundation" (prefixes 10.17410 / 10.30682, 2,066
+      DOIs), carries the city name but is a distinct legal entity and is deliberately excluded.
+  - standard: orcid
+    conformant: false
+    operator: institution
+    evidence:
+      url: https://amsacta.unibo.it/cgi/oai2?verb=ListRecords&metadataPrefix=oai_datacite
+      status: 200
+      content_type: text/xml
+      location: >-
+        287,417-byte response; zero occurrences of "orcid" and zero
+        nameIdentifierScheme="ORCID" attributes across the returned records.
+    detail: >-
+      ORCID identifiers were not found in any metadata the university serves. The same
+      negative result holds for https://cris.unibo.it/oai/request?verb=ListRecords&metadataPrefix=oai_dc
+      (342,926 bytes, no ORCID) and
+      https://journals.unibo.it/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc
+      (22,393 bytes, no ORCID). Researchers plainly hold ORCIDs, but no publicly harvestable
+      surface exposes them, so this is recorded as non-conformant rather than credited.
+  - standard: scim
+    conformant: false
+    evidence:
+      url: https://shib.unibo.it/idp/shibboleth
+      status: 200
+      location: Identity metadata only; no SCIM ServiceProviderConfig or /scim/v2 surface.
+    detail: >-
+      No public SCIM 2.0 provisioning endpoint was found on any unibo.it host. Identity
+      provisioning sits behind the ADFS/Azure service gateway and is internal.
+  - standard: oneroster
+    conformant: false
+    evidence:
+      url: https://virtuale.unibo.it/
+      status: 200
+      location: Moodle site with no IMS OneRoster endpoint exposed.
+    detail: >-
+      No OneRoster surface found. OneRoster is predominantly a K-12 rostering standard and is
+      not expected at an Italian research university.
+  - standard: ed-fi
+    conformant: false
+    evidence:
+      url: https://www.unibo.it/en
+      status: 200
+      location: No Ed-Fi API surface referenced anywhere on the institutional site.
+    detail: >-
+      No Ed-Fi surface found. Ed-Fi is a US K-12 data standard and does not apply here.
+  - standard: caliper
+    conformant: false
+    evidence:
+      url: https://virtuale.unibo.it/webservice/rest/server.php
+      status: 200
+      location: >-
+        <EXCEPTION class="core\exception\moodle_exception"><ERRORCODE>invalidtoken</ERRORCODE>
+        — the only Moodle data surface reachable, and it is token-gated.
+    detail: >-
+      Moodle can emit Caliper Analytics events, but nothing is publicly exposed on
+      virtuale.unibo.it and no event store is reachable without a token.
+  - standard: qti
+    conformant: false
+    evidence:
+      url: https://virtuale.unibo.it/
+      status: 200
+      location: Assessment content sits behind Virtuale authentication.
+    detail: No public QTI assessment surface found.
+general_standards:
+  - id: http
+    conforms: true
+    evidence: Every surface profiled here is plain HTTPS over TLS.
+  - id: xml
+    conforms: true
+    evidence: >-
+      OAI-PMH (five endpoints), the Shibboleth IdP metadata, the IDEM GARR aggregate and the
+      Moodle Web Services error envelope are all XML.
+  - id: json
+    conforms: true
+    evidence: >-
+      The CKAN Action API (https://dati.unibo.it/api/3/action/package_list) and the Moodle LTI
+      JWKS (https://virtuale.unibo.it/mod/lti/certs.php) both return application/json.
+  - id: openapi
+    conforms: false
+    evidence: >-
+      The University of Bologna publishes no OpenAPI description for any of its surfaces, and
+      none has been generated in this repository to stand in for one. CKAN, EPrints, OJS,
+      Moodle and DSpace-CRIS contracts are product contracts shared by every deployment of
+      that software and belong in the vendors' own repos.
+  - id: oauth2
+    conforms: partial
+    evidence: >-
+      An OAuth2 client-credentials token endpoint exists at
+      https://virtuale.unibo.it/mod/lti/token.php as part of the LTI 1.3 platform (HTTP 400
+      {"error":"invalid_request"} to an empty request), but it is not offered as a
+      general-purpose developer authorization surface. No other surface uses OAuth: the CKAN
+      Action API is anonymous read, OJS and Moodle Web Services use opaque tokens, and IRIS
+      uses HTTP basic auth.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      No application/problem+json anywhere. OJS returns
+      {"error":"api.403.unauthorized","errorMessage":"You are not authorized to access the
+      requested resource."}; Moodle returns an XML <EXCEPTION> envelope; IRIS returns a
+      plain-text Tomcat "HTTP Status 401 - Invalid basic authentication token".
