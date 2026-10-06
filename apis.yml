@@ -77,7 +77,7 @@ tags:
   - Scholarly Publishing
   - Learning Management
 created: '2026-06-03'
-modified: '2026-09-01'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
   - aid: university-of-bologna:opendata-ckan
@@ -387,6 +387,8 @@ apis:
     baseURL: https://api.ror.org/organizations/01111rn36
     tags: [ ROR, Registry, Persistent Identifiers, Research ]
 common:
+  - url: https://www.unibo.it/atom.xml
+    type: BlogRSS
   - type: Website
     url: https://www.unibo.it/en
   - type: OpenData
