@@ -5,17 +5,17 @@
       "source": "https://www.unibo.it/atom.xml",
       "feed_url": "https://www.unibo.it/atom.xml",
       "title": "",
-      "saved": 11,
+      "saved": 0,
       "method": "feed"
     },
     {
-      "source": "https://magazine.unibo.it/",
+      "source": "https://magazine.unibo.it/atom.xml",
       "feed_url": "https://magazine.unibo.it/atom.xml",
       "title": "",
       "saved": 0,
-      "method": "discovered"
+      "method": "feed"
     }
   ],
-  "post_count": 11,
-  "fetched": "2026-10-10T13:15:00Z"
+  "post_count": 17,
+  "fetched": "2026-10-17T14:53:57Z"
 }
